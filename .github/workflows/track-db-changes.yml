@@ -1,0 +1,34 @@
+name: Track SQL Server Database Changes
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Runs every hour (adjust as needed)
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  export-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install SQL Server Client Tools
+        run: sudo apt-get install -y mssql-tools unixodbc-dev
+
+      - name: Connect to SQL Server and Export Schema
+        run: |
+          sqlcmd -S ${{ secrets.DB_HOST }},${{ secrets.DB_PORT }} \
+                 -U ${{ secrets.DB_USER }} \
+                 -P ${{ secrets.DB_PASS }} \
+                 -d ${{ secrets.DB_NAME }} \
+                 -Q "EXEC sp_MSforeachtable 'SELECT * FROM ?'" > database/data.sql
+          sqlcmd -S ${{ secrets.DB_HOST }},${{ secrets.DB_PORT }} \
+                 -U ${{ secrets.DB_USER }} \
+                 -P ${{ secrets.DB_PASS }} \
+                 -d ${{ secrets.DB_NAME }} \
+                 -Q "EXEC sp_help" > database/schema.sql
+
+      - name: Check for Changes
+        run: |
+          git add database/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Updated database schema & data" && git push)
