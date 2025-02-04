@@ -1,5 +1,8 @@
 Project Structure
 
+http://localhost/php_project-master/product.php
+http://127.0.0.1/phpmyadmin/index.php?route=/database/structure&db=php_ecom
+
 admin/
     add_product.php
     admin_style.css
