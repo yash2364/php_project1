@@ -2,8 +2,8 @@ name: Track SQL Server Database Changes
 
 on:
   schedule:
-    - cron: "0 * * * *" # Runs every hour (adjust as needed)
-  workflow_dispatch:  # Manual trigger
+    - cron: "0 * * * *"  # Runs every hour (adjust as needed)
+  workflow_dispatch:  # Manual trigger for testing
 
 jobs:
   export-database:
@@ -15,20 +15,23 @@ jobs:
       - name: Install SQL Server Client Tools
         run: sudo apt-get install -y mssql-tools unixodbc-dev
 
-      - name: Connect to SQL Server and Export Schema
+      - name: Export Database Schema (php_ecom)
         run: |
           sqlcmd -S ${{ secrets.DB_HOST }},${{ secrets.DB_PORT }} \
                  -U ${{ secrets.DB_USER }} \
                  -P ${{ secrets.DB_PASS }} \
-                 -d ${{ secrets.DB_NAME }} \
-                 -Q "EXEC sp_MSforeachtable 'SELECT * FROM ?'" > database/data.sql
-          sqlcmd -S ${{ secrets.DB_HOST }},${{ secrets.DB_PORT }} \
-                 -U ${{ secrets.DB_USER }} \
-                 -P ${{ secrets.DB_PASS }} \
-                 -d ${{ secrets.DB_NAME }} \
+                 -d php_ecom \
                  -Q "EXEC sp_help" > database/schema.sql
 
-      - name: Check for Changes
+      - name: Export Database Data (php_ecom)
+        run: |
+          sqlcmd -S ${{ secrets.DB_HOST }},${{ secrets.DB_PORT }} \
+                 -U ${{ secrets.DB_USER }} \
+                 -P ${{ secrets.DB_PASS }} \
+                 -d php_ecom \
+                 -Q "SET NOCOUNT ON; EXEC sp_MSforeachtable 'SELECT * FROM ?'" > database/data.sql
+
+      - name: Check for Changes and Commit
         run: |
           git add database/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Updated database schema & data" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Updated php_ecom database schema & data" && git push)
