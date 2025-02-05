@@ -21,7 +21,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -41,6 +40,9 @@ jobs:
           done
           echo "❌ MySQL did not start in time."
           exit 1
+
+      - name: Check MySQL Logs
+        run: sudo tail -n 50 /var/log/mysql/error.log
 
       - name: Check Available Databases
         run: |
