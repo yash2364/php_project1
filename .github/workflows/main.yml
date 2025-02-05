@@ -1,0 +1,41 @@
+jobs:
+  test-mysql:
+    runs-on: ubuntu-22.04
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: php_ecom
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Install MySQL Client
+        run: sudo apt-get install -y mysql-client
+
+      - name: Verify MySQL Service
+        run: sudo systemctl status mysql || echo "MySQL service not found"
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            mysql -h 127.0.0.1 -u root -proot -e "SELECT 1" 2>&1 && exit 0
+            echo "Waiting for MySQL..."
+            sleep 5
+          done
+          echo "❌ MySQL did not start in time."
+          exit 1
+
+      - name: Check Available Databases
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "SHOW DATABASES;"
+
+      - name: Run SQL Query
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "USE php_ecom; SHOW TABLES;"
