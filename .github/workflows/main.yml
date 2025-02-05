@@ -53,16 +53,23 @@ jobs:
         run: |
           export MYSQL_PWD=root
           echo "Checking tables in php_ecom database..."
-          
-          # Run the SHOW TABLES command and display the output
+
+          # Run the SHOW TABLES command and capture output
           tables=$(mysql -h 127.0.0.1 -u root -e "USE php_ecom; SHOW TABLES;" 2>&1)
           
           # Print the result of SHOW TABLES
+          echo "Tables in php_ecom database:"
           echo "$tables"
-          
+
           # Check if no tables are found
           if [[ "$tables" == *"Empty set"* ]]; then
             echo "No tables found in php_ecom."
           else
             echo "Tables found in php_ecom."
+          fi
+          
+          # Additional debugging: Show error logs if any
+          if [[ "$tables" == *"ERROR"* ]]; then
+            echo "Error encountered while retrieving tables."
+            echo "$tables"
           fi
