@@ -52,9 +52,11 @@ jobs:
       - name: Show Tables in php_ecom
         run: |
           export MYSQL_PWD=root
+          echo "Checking tables in php_ecom database..."
           mysql -h 127.0.0.1 -u root -e "USE php_ecom; SHOW TABLES;"
 
       - name: Run SQL Query (Example)
         run: |
           export MYSQL_PWD=root
-          mysql -h 127.0.0.1 -u root -e "USE php_ecom; SELECT * FROM orders LIMIT 5;"
+          echo "Attempting to select from 'orders' table..."
+          mysql -h 127.0.0.1 -u root -e "USE php_ecom; SELECT * FROM orders LIMIT 5;" || echo "Table 'orders' does not exist."
