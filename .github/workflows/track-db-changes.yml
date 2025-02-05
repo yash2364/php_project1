@@ -1,4 +1,4 @@
-name: Track SQL Server Database Changes
+name: Track SQL Server Database Changes 
 
 on:
   schedule:
@@ -11,6 +11,12 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Add Microsoft SQL Server Repository
+        run: |
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+          sudo add-apt-repository "$(curl -s https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list)"
+          sudo apt-get update
 
       - name: Install SQL Server Client Tools
         run: sudo apt-get install -y mssql-tools unixodbc-dev
