@@ -1,6 +1,9 @@
-workflow_dispatch:  # Allows manual triggering
-schedule:
-  - cron: "0 * * * *"  # Runs every hour (adjust as needed)
+name: MySQL Database Workflow
+
+on:
+  workflow_dispatch:  # Allows manual triggering
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour (adjust as needed)
 
 jobs:
   test-mysql:
