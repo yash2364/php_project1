@@ -1,7 +1,6 @@
-on:
-  workflow_dispatch:  # Allows manual triggering
-  schedule:
-    - cron: "0 * * * *"  # Runs every hour (adjust as needed)
+workflow_dispatch:  # Allows manual triggering
+schedule:
+  - cron: "0 * * * *"  # Runs every hour (adjust as needed)
 
 jobs:
   test-mysql:
@@ -30,7 +29,7 @@ jobs:
       - name: Verify MySQL Service
         run: sudo systemctl status mysql || echo "MySQL service not found"
 
-      - name: Wait for MySQL
+      - name: Wait for MySQL to Start
         run: |
           for i in {1..30}; do
             mysql -h 127.0.0.1 -u root -proot -e "SELECT 1" 2>&1 && exit 0
@@ -44,6 +43,10 @@ jobs:
         run: |
           mysql -h 127.0.0.1 -u root -proot -e "SHOW DATABASES;"
 
-      - name: Run SQL Query
+      - name: Show Tables in php_ecom
         run: |
           mysql -h 127.0.0.1 -u root -proot -e "USE php_ecom; SHOW TABLES;"
+
+      - name: Run SQL Query (Example)
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "USE php_ecom; SELECT * FROM <table_name> LIMIT 5;"
