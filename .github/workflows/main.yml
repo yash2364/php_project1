@@ -1,0 +1,27 @@
+jobs:
+  test-mysql:
+    runs-on: ubuntu-22.04
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: php_ecom
+        ports:
+          - 3306:3306
+    steps:
+      - name: Install MySQL Client
+        run: sudo apt-get install -y mysql-client
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            mysql -h 127.0.0.1 -u root -proot -e "SELECT 1" && exit 0
+            echo "Waiting for MySQL..."
+            sleep 5
+          done
+          exit 1
+
+      - name: Run SQL Query
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "SHOW DATABASES;"
