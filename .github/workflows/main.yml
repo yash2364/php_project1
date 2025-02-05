@@ -57,4 +57,4 @@ jobs:
       - name: Run SQL Query (Example)
         run: |
           export MYSQL_PWD=root
-          mysql -h 127.0.0.1 -u root -e "USE php_ecom; SELECT * FROM <table_name> LIMIT 5;"
+          mysql -h 127.0.0.1 -u root -e "USE php_ecom; SELECT * FROM orders LIMIT 5;"
