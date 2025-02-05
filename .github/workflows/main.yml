@@ -44,12 +44,15 @@ jobs:
 
       - name: Check Available Databases
         run: |
-          mysql -h 127.0.0.1 -u root -proot -e "SHOW DATABASES;"
+          export MYSQL_PWD=root
+          mysql -h 127.0.0.1 -u root -e "SHOW DATABASES;"
 
       - name: Show Tables in php_ecom
         run: |
-          mysql -h 127.0.0.1 -u root -proot -e "USE php_ecom; SHOW TABLES;"
+          export MYSQL_PWD=root
+          mysql -h 127.0.0.1 -u root -e "USE php_ecom; SHOW TABLES;"
 
       - name: Run SQL Query (Example)
         run: |
-          mysql -h 127.0.0.1 -u root -proot -e "USE php_ecom; SELECT * FROM <table_name> LIMIT 5;"
+          export MYSQL_PWD=root
+          mysql -h 127.0.0.1 -u root -e "USE php_ecom; SELECT * FROM <table_name> LIMIT 5;"
