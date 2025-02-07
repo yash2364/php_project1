@@ -1,63 +1,37 @@
-name: MySQL Database Workflow
+name: Track SQL Server Database Changes
 
 on:
-  workflow_dispatch:  # Allows manual triggering
   schedule:
     - cron: "0 * * * *"  # Runs every hour (adjust as needed)
+  workflow_dispatch:  # Allows manual trigger for testing
 
 jobs:
-  test-mysql:
-    runs-on: ubuntu-22.04
-    services:
-      mysql:
-        image: mysql:latest
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: php_ecom
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd "mysqladmin ping -h 127.0.0.1 -uroot -proot"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+  export-database:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install MySQL Client
-        run: sudo apt-get install -y mysql-client
+      - name: Install SQL Server Client Tools
+        run: sudo apt-get install -y mssql-tools unixodbc-dev
 
-      - name: Verify MySQL Service
-        run: sudo systemctl status mysql || echo "MySQL service not found"
+      - name: Export Database Schema (php_ecom)
+        run: |
+          sqlcmd -S ${{ secrets.DB_HOST }},${{ secrets.DB_PORT }} \
+                 -U ${{ secrets.DB_USER }} \
+                 -P ${{ secrets.DB_PASS }} \
+                 -d php_ecom \
+                 -Q "EXEC sp_help" > database/schema.sql
 
-      - name: Wait for MySQL to Start
+      - name: Export Database Data (php_ecom)
         run: |
-          for i in {1..30}; do
-            mysql -h 127.0.0.1 -u root -proot -e "SELECT 1" 2>&1 && exit 0
-            echo "Waiting for MySQL..."
-            sleep 5
-          done
-          echo "❌ MySQL did not start in time."
-          exit 1
-      - name: Check MySQL Logs
-        run: sudo tail -n 50 /var/log/mysql/error.log
+          sqlcmd -S ${{ secrets.DB_HOST }},${{ secrets.DB_PORT }} \
+                 -U ${{ secrets.DB_USER }} \
+                 -P ${{ secrets.DB_PASS }} \
+                 -d php_ecom \
+                 -Q "SET NOCOUNT ON; EXEC sp_MSforeachtable 'SELECT * FROM ?'" > database/data.sql
 
-      - name: Check Available Databases
+      - name: Check for Changes and Commit
         run: |
-          export MYSQL_PWD=root
-          mysql -h 127.0.0.1 -u root -e "SHOW DATABASES;"
-      - name: Show Tables in php_ecom
-        run: |
-          export MYSQL_PWD=root
-          echo "Checking tables in php_ecom database..."
-          
-          # Run the SHOW TABLES command directly without capturing output
-          mysql -h 127.0.0.1 -u root -e "USE php_ecom; SHOW TABLES;" || echo "Error retrieving tables."
-      - name: Check Tables Again (Direct Query with Error Output)
-        run: |
-          export MYSQL_PWD=root
-          echo "Directly querying the tables in php_ecom..."
-          
-          # Run the SHOW TABLES command with error handling and output to logs
-          mysql -h 127.0.0.1 -u root -e "USE php_ecom; SHOW TABLES;" 2>&1 || echo "Error executing SHOW TABLES"
+          git add database/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Updated php_ecom database schema & data" && git push)
