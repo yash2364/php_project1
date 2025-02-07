@@ -40,7 +40,6 @@ jobs:
           done
           echo "❌ MySQL did not start in time."
           exit 1
-
       - name: Check MySQL Logs
         run: sudo tail -n 50 /var/log/mysql/error.log
 
@@ -48,7 +47,6 @@ jobs:
         run: |
           export MYSQL_PWD=root
           mysql -h 127.0.0.1 -u root -e "SHOW DATABASES;"
-
       - name: Show Tables in php_ecom
         run: |
           export MYSQL_PWD=root
@@ -56,7 +54,6 @@ jobs:
           
           # Run the SHOW TABLES command directly without capturing output
           mysql -h 127.0.0.1 -u root -e "USE php_ecom; SHOW TABLES;" || echo "Error retrieving tables."
-
       - name: Check Tables Again (Direct Query with Error Output)
         run: |
           export MYSQL_PWD=root
