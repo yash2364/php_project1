@@ -15,14 +15,14 @@ jobs:
 
       - name: Set up MySQL
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: |
           sudo systemctl start mysql
-          mysql -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS your_database;"
+          mysql -u yash -p$MYSQL_PASSWORD -e "CREATE DATABASE IF NOT EXISTS your_database;"
 
       - name: Run Backup Script
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: bash backup_db.sh
 
       - name: Commit and Push Backup
