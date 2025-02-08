@@ -2,8 +2,8 @@
 
 # MySQL Credentials
 DB_NAME="php_ecom"
-DB_USER="any"
-DB_PASS=""
+DB_USER="pma"
+DB_PASS="Y@sh23647966"
 LATEST_BACKUP=$(ls -t backups/*.sql | head -1)
 
 # Restore the latest backup
