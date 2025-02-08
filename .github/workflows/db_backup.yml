@@ -18,7 +18,7 @@ jobs:
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: |
           sudo systemctl start mysql
-          mysql -u yash -p$MYSQL_PASSWORD -e "CREATE DATABASE IF NOT EXISTS your_database;"
+          mysql -u root -p$MYSQL_PASSWORD -e "CREATE DATABASE IF NOT EXISTS your_database;"
 
       - name: Run Backup Script
         env:
