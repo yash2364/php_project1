@@ -2,8 +2,8 @@
 
 # Configurations
 DB_NAME="php_ecom"
-DB_USER="yash"
-DB_PASS="Y@sh236479666965"
+DB_USER="any"
+DB_PASS=""
 BACKUP_DIR="backups"
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 BACKUP_FILE="$BACKUP_DIR/backup_$TIMESTAMP.sql"
