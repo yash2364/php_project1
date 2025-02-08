@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set executable permission
-        run: chmod +x backup_db.sh  # Ensures script is executable
+        run: chmod +x backups/backup_db.sh  # 🔹 Fix: Use correct path
 
       - name: Set up MySQL
         env:
@@ -26,7 +26,7 @@ jobs:
       - name: Run Backup Script
         env:
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        run: bash backup_db.sh
+        run: bash backup/backup_db.sh  # 🔹 Fix: Use correct path
 
       - name: Commit and Push Backup
         run: |
