@@ -1,0 +1,30 @@
+name: Database Backup
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Runs every 6 hours
+  workflow_dispatch:  # Allows manual execution
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up MySQL
+        run: |
+          sudo systemctl start mysql
+          mysql -e "CREATE DATABASE IF NOT EXISTS your_database;"
+
+      - name: Run Backup Script
+        run: bash backup_db.sh
+
+      - name: Commit and Push Backup
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add backups/
+          git commit -m "Database backup: $(date)"
+          git push
