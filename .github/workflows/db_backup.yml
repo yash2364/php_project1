@@ -26,7 +26,7 @@ jobs:
       - name: Run Backup Script
         env:
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        run: bash backup/backup_db.sh  # 🔹 Fix: Use correct path
+        run: bash backups/backup_db.sh  # 🔹 Fix: Use correct path
 
       - name: Commit and Push Backup
         run: |
