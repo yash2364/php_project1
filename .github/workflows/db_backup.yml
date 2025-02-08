@@ -14,11 +14,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up MySQL
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: |
           sudo systemctl start mysql
-          mysql -e "CREATE DATABASE IF NOT EXISTS your_database;"
+          mysql -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS your_database;"
 
       - name: Run Backup Script
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: bash backup_db.sh
 
       - name: Commit and Push Backup
@@ -26,5 +30,5 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add backups/
-          git commit -m "Database backup: $(date)"
+          git commit -m "🔄 Database backup: $(date)"
           git push
