@@ -1,18 +1,31 @@
 #!/bin/bash
 
-# MySQL Credentials
-DB_NAME="php_ecom"
-DB_USER="pma"
-DB_PASS="Y@sh23647966"
-LATEST_BACKUP=$(ls -t backups/*.sql | head -1)
+# Ensure the script is executable
+chmod +x "$0"
 
-# Restore the latest backup
-mysql -u$DB_USER -p$DB_PASS $DB_NAME < $LATEST_BACKUP
+# Database credentials
+DB_USER="pma"
+DB_PASS="Y@sh23647966"  # 🔹 Directly using the password
+DB_HOST="192.168.92.110"
+DB_NAME="php_ecom"
+BACKUP_DIR="backups"
+
+# Find the latest backup file
+LATEST_BACKUP=$(ls -t $BACKUP_DIR/php_ecom_backup_*.sql | head -n 1)
+
+# Check if backup file exists
+if [ -z "$LATEST_BACKUP" ]; then
+    echo "❌ No backup file found!"
+    exit 1
+fi
+
+# Restore database
+mysql -u "$DB_USER" -p"$DB_PASS" -h "$DB_HOST" "$DB_NAME" < "$LATEST_BACKUP"
 
 # Verify restore success
 if [ $? -eq 0 ]; then
-    echo "✅ Database restored successfully from $LATEST_BACKUP"
+    echo "✅ Restore successful from $LATEST_BACKUP"
 else
-    echo "❌ Database restore failed!"
+    echo "❌ Restore failed!"
     exit 1
 fi
