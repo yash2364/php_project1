@@ -1,25 +1,28 @@
-name: Database Backup
+name: Database Backup & Restore
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Run every 6 hours
-  workflow_dispatch:  # Allow manual execution
+    - cron: '0 */6 * * *'  # Runs every 6 hours
+  workflow_dispatch:  # Allows manual execution
 
 jobs:
-  backup:
+  backup_restore:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set Executable Permission
-        run: chmod +x backups/backup_db.sh  # Ensure script is executable
+      - name: Set Executable Permissions
+        run: chmod +x backups/backup_db.sh backups/restore_db.sh
+
+      - name: Check MySQL Status
+        run: mysqladmin ping -h 127.0.0.1 -u root --password="${{ secrets.MYSQL_PASSWORD }}" || exit 1
 
       - name: Run Backup Script
         env:
           MYSQL_USER: "root"
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
           MYSQL_HOST: "127.0.0.1"
           MYSQL_DB: "php_ecom"
         run: bash backups/backup_db.sh
@@ -31,3 +34,12 @@ jobs:
           git add backups/
           git commit -m "🔄 Database backup: $(date)"
           git push
+
+      - name: Run Restore Script (Optional)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          MYSQL_USER: "root"
+          MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
+          MYSQL_HOST: "127.0.0.1"
+          MYSQL_DB: "php_ecom"
+        run: bash backups/restore_db.sh
