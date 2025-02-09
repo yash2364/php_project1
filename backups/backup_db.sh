@@ -1,24 +1,20 @@
 #!/bin/bash
 
-# Ensure the script is executable
-chmod +x "$0"
-
-# Load GitHub Secrets (provided as environment variables in GitHub Actions)
-DB_USER="${MYSQL_USER}"
-DB_PASS="${MYSQL_PASS}"
-DB_HOST="${MYSQL_HOST}"
-DB_NAME="${MYSQL_DB}"
+# Environment Variables
+MYSQL_USER="pma"
+MYSQL_PASS="${MYSQL_PASS}"
+MYSQL_HOST="192.168.92.110"
+MYSQL_DB="php_ecom"
 BACKUP_DIR="backups"
-TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-BACKUP_FILE="$BACKUP_DIR/php_ecom_backup_$TIMESTAMP.sql"
+BACKUP_FILE="$BACKUP_DIR/db_backup_$(date +'%Y-%m-%d_%H-%M-%S').sql"
 
 # Create backup directory if not exists
-mkdir -p "$BACKUP_DIR"
+mkdir -p $BACKUP_DIR
 
-# Perform backup
-mysqldump -u "$DB_USER" -p"$DB_PASS" -h "$DB_HOST" "$DB_NAME" > "$BACKUP_FILE"
+# Perform MySQL backup
+echo "🔄 Starting database backup..."
+mysqldump -u$MYSQL_USER -p$MYSQL_PASS -h$MYSQL_HOST $MYSQL_DB > $BACKUP_FILE
 
-# Verify backup success
 if [ $? -eq 0 ]; then
     echo "✅ Backup successful: $BACKUP_FILE"
 else
