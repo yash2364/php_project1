@@ -3,7 +3,7 @@
 # Environment Variables
 MYSQL_USER="pma"
 MYSQL_PASS="${MYSQL_PASS}"
-MYSQL_HOST="localhost"
+MYSQL_HOST="127.0.0.1"
 MYSQL_DB="php_ecom"
 BACKUP_DIR="backups"
 
