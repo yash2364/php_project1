@@ -3,11 +3,11 @@
 # Ensure the script is executable
 chmod +x "$0"
 
-# Database credentials
-DB_USER="pma"
-DB_PASS="Y@sh23647966"  # 🔹 Directly using the password
-DB_HOST="192.168.92.110"
-DB_NAME="php_ecom"
+# Load GitHub Secrets
+DB_USER="${MYSQL_USER}"
+DB_PASS="${MYSQL_PASS}"
+DB_HOST="${MYSQL_HOST}"
+DB_NAME="${MYSQL_DB}"
 BACKUP_DIR="backups"
 
 # Find the latest backup file
