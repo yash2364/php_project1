@@ -2,8 +2,8 @@ name: Database Backup
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Runs every 6 hours
-  workflow_dispatch:  # Allows manual execution
+    - cron: '0 */6 * * *'  # Run every 6 hours
+  workflow_dispatch:  # Allow manual execution
 
 jobs:
   backup:
@@ -13,15 +13,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set Executable Permissions
-        run: chmod +x backups/backup_db.sh backups/restore_db.sh
+      - name: Set Executable Permission
+        run: chmod +x backups/backup_db.sh  # Ensure script is executable
 
-      - name: Run Database Backup
+      - name: Run Backup Script
         env:
-          MYSQL_USER: pma
-          MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_DB: php_ecom
+          MYSQL_USER: "pma"
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_HOST: "127.0.0.1"
+          MYSQL_DB: "php_ecom"
         run: bash backups/backup_db.sh
 
       - name: Commit and Push Backup
