@@ -1,30 +1,26 @@
 #!/bin/bash
 
-# Ensure the script is executable
-chmod +x "$0"
-
-# Load GitHub Secrets
-DB_USER="${MYSQL_USER}"
-DB_PASS="${MYSQL_PASS}"
-DB_HOST="${MYSQL_HOST}"
-DB_NAME="${MYSQL_DB}"
+# Environment Variables
+MYSQL_USER="pma"
+MYSQL_PASS="${MYSQL_PASS}"
+MYSQL_HOST="192.168.92.110"
+MYSQL_DB="php_ecom"
 BACKUP_DIR="backups"
 
 # Find the latest backup file
-LATEST_BACKUP=$(ls -t $BACKUP_DIR/php_ecom_backup_*.sql | head -n 1)
+LATEST_BACKUP=$(ls -t $BACKUP_DIR/db_backup_*.sql | head -n 1)
 
-# Check if backup file exists
 if [ -z "$LATEST_BACKUP" ]; then
     echo "❌ No backup file found!"
     exit 1
 fi
 
-# Restore database
-mysql -u "$DB_USER" -p"$DB_PASS" -h "$DB_HOST" "$DB_NAME" < "$LATEST_BACKUP"
+# Restore the database
+echo "🔄 Restoring database from: $LATEST_BACKUP..."
+mysql -u$MYSQL_USER -p$MYSQL_PASS -h$MYSQL_HOST $MYSQL_DB < $LATEST_BACKUP
 
-# Verify restore success
 if [ $? -eq 0 ]; then
-    echo "✅ Restore successful from $LATEST_BACKUP"
+    echo "✅ Database restore successful!"
 else
     echo "❌ Restore failed!"
     exit 1
