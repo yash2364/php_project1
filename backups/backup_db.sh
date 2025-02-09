@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load environment variables
-MYSQL_USER="pma"
+MYSQL_USER="root"
 MYSQL_PASSWORD="${MYSQL_PASSWORD}"
 MYSQL_HOST="127.0.0.1"
 MYSQL_DB="php_ecom"
