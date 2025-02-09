@@ -3,7 +3,7 @@
 # Environment Variables
 MYSQL_USER="pma"
 MYSQL_PASS="${MYSQL_PASS}"
-MYSQL_HOST="192.168.92.110"
+MYSQL_HOST="localhost"
 MYSQL_DB="php_ecom"
 BACKUP_DIR="backups"
 BACKUP_FILE="$BACKUP_DIR/db_backup_$(date +'%Y-%m-%d_%H-%M-%S').sql"
