@@ -13,15 +13,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set executable permission
-        run: chmod +x backups/backup_db.sh backups/restore_db.sh  # 🔹 Fix: Ensure both scripts are executable
+      - name: Set Executable Permissions
+        run: chmod +x backups/backup_db.sh backups/restore_db.sh
 
-      - name: Run Backup Script
+      - name: Run Database Backup
         env:
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_USER: pma
           MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
-          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-          MYSQL_DB: ${{ secrets.MYSQL_DB }}
+          MYSQL_HOST: 192.168.92.110
+          MYSQL_DB: php_ecom
         run: bash backups/backup_db.sh
 
       - name: Commit and Push Backup
