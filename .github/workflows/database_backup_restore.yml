@@ -1,0 +1,61 @@
+name: Database Backup & Restore
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'  # Runs every 3 hours
+  workflow_dispatch:  # Allows manual execution
+
+jobs:
+  backup_restore:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Executable Permissions
+        run: chmod +x backups/backup_db.sh backups/restore_db.sh
+
+      - name: Check MySQL Status
+        env:
+          MYSQL_HOST: "192.168.92.110"
+          MYSQL_PORT: "3306"
+          MYSQL_USER: "ci_user"
+          MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
+        run: |
+          if ! mysqladmin ping -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" --password="$MYSQL_PASSWORD" --silent; then
+            echo "❌ MySQL is not accessible!"
+            exit 1
+          fi
+          echo "✅ MySQL is accessible."
+
+      - name: Run Backup Script
+        env:
+          MYSQL_USER: "ci_user"
+          MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
+          MYSQL_HOST: "192.168.92.110"
+          MYSQL_PORT: "3306"
+          MYSQL_DB: "php_ecom"
+        run: bash backups/backup_db.sh
+
+      - name: Commit and Push Backup
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add backups/
+          if git diff --cached --quiet; then
+            echo "⚠️ No changes to commit."
+            exit 0
+          fi
+          git commit -m "🔄 Database backup: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git push
+
+      - name: Run Restore Script (Optional)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          MYSQL_USER: "ci_user"
+          MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
+          MYSQL_HOST: "192.168.92.110"
+          MYSQL_PORT: "3306"
+          MYSQL_DB: "php_ecom"
+        run: bash backups/restore_db.sh
