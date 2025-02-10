@@ -3,9 +3,10 @@
 echo "🔄 Starting database backup..."
 
 # Environment Variables
-MYSQL_USER="root"
+MYSQL_USER="ci_user"
 MYSQL_PASSWORD="${MYSQL_PASSWORD}"
-MYSQL_HOST="127.0.0.1"
+MYSQL_HOST="192.168.92.110"
+MYSQL_PORT="3306"
 MYSQL_DB="php_ecom"
 BACKUP_DIR="backups"
 TIMESTAMP=$(date +"%Y%m%d%H%M%S")
@@ -15,7 +16,7 @@ BACKUP_FILE="${BACKUP_DIR}/php_ecom_backup_${TIMESTAMP}.sql"
 mkdir -p ${BACKUP_DIR}
 
 # Run backup
-mysqldump -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DB} > ${BACKUP_FILE}
+mysqldump -h ${MYSQL_HOST} -P ${MYSQL_PORT} -u ${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DB} > ${BACKUP_FILE}
 
 # Check success
 if [ $? -eq 0 ]; then
