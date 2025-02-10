@@ -16,25 +16,25 @@ jobs:
       - name: Set Executable Permissions
         run: chmod +x backups/backup_db.sh backups/restore_db.sh
 
-      - name: Verify MySQL Process by PID (4324)
+      - name: Check MySQL Process
         run: |
-          PID_FOUND=$(ps -aux | grep "mysqld" | awk '{print $2}' | grep -w 4324)
+          PID_FOUND=$(pgrep mysqld | head -n 1)
           if [ -z "$PID_FOUND" ]; then
-            echo "❌ MySQL process with PID 4324 not found!"
+            echo "❌ MySQL process not found!"
             exit 1
           else
-            echo "✅ MySQL is running with PID 4324"
+            echo "✅ MySQL is running with PID $PID_FOUND"
           fi
 
-      - name: Check MySQL Status
+      - name: Check MySQL Connection
         env:
           MYSQL_HOST: "192.168.29.245"
           MYSQL_PORT: "3306"
           MYSQL_USER: "ci_user"
           MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
         run: |
-          nc -zv $MYSQL_HOST $MYSQL_PORT || { echo "❌ MySQL Port Unreachable!"; exit 1; }
           mysqladmin ping -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER --password="$MYSQL_PASSWORD" || exit 1
+          echo "✅ MySQL is reachable!"
 
       - name: Run Backup Script
         env:
