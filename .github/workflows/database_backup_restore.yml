@@ -16,14 +16,22 @@ jobs:
       - name: Set Executable Permissions
         run: chmod +x backups/backup_db.sh backups/restore_db.sh
 
+      - name: Debug MySQL Connection
+        env:
+          MYSQL_HOST: "192.168.92.110"
+          MYSQL_PORT: "3306"
+        run: |
+          echo "🔍 Checking MySQL connection..."
+          nc -zv $MYSQL_HOST $MYSQL_PORT || { echo "❌ Port is unreachable!"; exit 1; }
+
       - name: Check MySQL Status
         env:
           MYSQL_HOST: "192.168.92.110"
           MYSQL_PORT: "3306"
           MYSQL_USER: "ci_user"
-          MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
+          MYSQL_PWD: "${{ secrets.MYSQL_PASSWORD }}"
         run: |
-          if ! mysqladmin ping -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" --password="$MYSQL_PASSWORD" --silent; then
+          if ! mysqladmin ping -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" --silent; then
             echo "❌ MySQL is not accessible!"
             exit 1
           fi
@@ -32,7 +40,7 @@ jobs:
       - name: Run Backup Script
         env:
           MYSQL_USER: "ci_user"
-          MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
+          MYSQL_PWD: "${{ secrets.MYSQL_PASSWORD }}"
           MYSQL_HOST: "192.168.92.110"
           MYSQL_PORT: "3306"
           MYSQL_DB: "php_ecom"
@@ -54,7 +62,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         env:
           MYSQL_USER: "ci_user"
-          MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
+          MYSQL_PWD: "${{ secrets.MYSQL_PASSWORD }}"
           MYSQL_HOST: "192.168.92.110"
           MYSQL_PORT: "3306"
           MYSQL_DB: "php_ecom"
