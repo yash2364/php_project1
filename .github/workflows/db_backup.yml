@@ -23,7 +23,7 @@ jobs:
           MYSQL_HOST: "192.168.29.245"
           MYSQL_PORT: "3306"
         run: |
-          Write-Output "Checking MySQL connection..."
+          Write-Output "🔍 Checking MySQL connection..."
           $result = Test-NetConnection -ComputerName $env:MYSQL_HOST -Port $env:MYSQL_PORT
           if (-not $result.TcpTestSucceeded) {
             Write-Output "❌ Port unreachable!"
@@ -39,7 +39,8 @@ jobs:
           MYSQL_USER: "ci_user"
           MYSQL_PWD: "${{ secrets.MYSQL_PASSWORD }}"
         run: |
-          if ! mysqladmin ping -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" --silent; then
+          echo "🔍 Checking MySQL status..."
+          if ! mysqladmin ping -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" -p"$MYSQL_PWD" --silent; then
             echo "❌ MySQL is not accessible!"
             exit 1
           fi
@@ -58,6 +59,7 @@ jobs:
       - name: Commit and Push Backup
         shell: bash
         run: |
+          echo "🔄 Committing backup files..."
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add backups/
@@ -67,6 +69,9 @@ jobs:
           fi
           git commit -m "🔄 Database backup: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
           git push
+        env:
+          GIT_AUTHOR_NAME: "GitHub Actions"
+          GIT_COMMITTER_NAME: "GitHub Actions"
 
       - name: Run Restore Script (Manual Trigger Only)
         if: github.event_name == 'workflow_dispatch'
