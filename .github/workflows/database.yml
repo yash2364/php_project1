@@ -59,7 +59,7 @@ jobs:
       - name: Commit and Push Backup
         shell: bash
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.GH_PAT }}"
         run: |
           echo "🔄 Committing backup files..."
           git config --global user.name "github-actions"
