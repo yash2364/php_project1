@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Database credentials
+# Load MySQL credentials from environment variables
 MYSQL_USER="ci_user"
-MYSQL_PWD="${MYSQL_PWD}"  # Using correct environment variable
+MYSQL_PASSWORD="${MYSQL_PASSWORD}"  # Secret from GitHub Actions
 MYSQL_HOST="192.168.29.245"
 MYSQL_PORT="3306"
 MYSQL_DB="php_ecom"
@@ -17,13 +17,14 @@ if [[ -z "$LATEST_BACKUP" ]]; then
 fi
 
 # Check if MySQL password is set
-if [[ -z "$MYSQL_PWD" ]]; then
-    echo "❌ Error: MySQL password is not set."
+if [[ -z "$MYSQL_PASSWORD" ]]; then
+    echo "❌ Error: MySQL password is not set!"
     exit 1
 fi
 
 # Restore the database from the latest backup
-mysql -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" -p"$MYSQL_PWD" "$MYSQL_DB" < "$LATEST_BACKUP"
+echo "🔄 Restoring database from $LATEST_BACKUP..."
+mysql -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DB" < "$LATEST_BACKUP"
 
 # Verify if restore was successful
 if [[ $? -eq 0 ]]; then
@@ -33,4 +34,5 @@ else
     exit 1
 fi
 
+echo "✅ Restore process completed successfully!"
 exit 0
