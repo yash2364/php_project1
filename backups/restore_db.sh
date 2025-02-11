@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Load MySQL credentials from environment variables
+# Database credentials
 MYSQL_USER="ci_user"
-MYSQL_PASSWORD="${MYSQL_PASSWORD}"  # Secret from GitHub Actions
+MYSQL_PASSWORD="${MYSQL_PASSWORD}"  # Correct environment variable
 MYSQL_HOST="192.168.29.245"
 MYSQL_PORT="3306"
 MYSQL_DB="php_ecom"
@@ -23,7 +23,6 @@ if [[ -z "$MYSQL_PASSWORD" ]]; then
 fi
 
 # Restore the database from the latest backup
-echo "🔄 Restoring database from $LATEST_BACKUP..."
 mysql -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DB" < "$LATEST_BACKUP"
 
 # Verify if restore was successful
@@ -34,5 +33,4 @@ else
     exit 1
 fi
 
-echo "✅ Restore process completed successfully!"
 exit 0
