@@ -1,13 +1,11 @@
 #!/bin/bash
 
-# Set MySQL credentials
 MYSQL_USER="ci_user"
 MYSQL_PASSWORD="${MYSQL_PASSWORD}"
 MYSQL_HOST="192.168.29.245"
 MYSQL_PORT="3306"
 MYSQL_DB="php_ecom"
 
-# Find the latest backup file
 LATEST_BACKUP=$(ls -t backups/php_ecom_backup_*.sql | head -n 1)
 
 if [ -z "$LATEST_BACKUP" ]; then
@@ -15,10 +13,8 @@ if [ -z "$LATEST_BACKUP" ]; then
     exit 1
 fi
 
-# Restore the database
 mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER --password="$MYSQL_PASSWORD" $MYSQL_DB < $LATEST_BACKUP
 
-# Verify restore success
 if [ $? -eq 0 ]; then
     echo "✅ Database restored successfully from $LATEST_BACKUP"
 else
