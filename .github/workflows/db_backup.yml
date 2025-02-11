@@ -53,7 +53,7 @@ jobs:
           MYSQL_HOST: "192.168.29.245"
           MYSQL_PORT: "3306"
           MYSQL_DB: "php_ecom"
-        run: backups/backup_db.sh
+        run: bash backups/backup_db.sh
 
       - name: Commit and Push Backup
         shell: bash
@@ -75,4 +75,6 @@ jobs:
           MYSQL_USER: "ci_user"
           MYSQL_PWD: "${{ secrets.MYSQL_PASSWORD }}"
           MYSQL_HOST: "192.168.29.245"
-          MYSQL_
+          MYSQL_PORT: "3306"
+          MYSQL_DB: "php_ecom"
+        run: bash backups/restore_db.sh
