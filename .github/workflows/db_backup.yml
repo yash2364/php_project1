@@ -1,8 +1,9 @@
 name: Database Backup & Restore
+
 on:
   schedule:
-    - cron: '0 */3 * * *'  # Every 3 hours
-  workflow_dispatch:  # Manual trigger
+    - cron: '0 */3 * * *'  # Runs every 3 hours
+  workflow_dispatch:  # Allows manual execution
 
 jobs:
   backup_restore:
@@ -11,8 +12,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set Executable Permissions
+      - name: Set Executable Permissions (Linux Only)
+        if: runner.os != 'Windows'
         run: chmod +x backups/backup_db.sh backups/restore_db.sh
+        shell: bash
 
       - name: Debug MySQL Connection
         env:
@@ -56,7 +59,7 @@ jobs:
           git commit -m "🔄 Database backup: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
           git push
 
-      - name: Run Restore Script (Optional)
+      - name: Run Restore Script (Manual Trigger Only)
         if: github.event_name == 'workflow_dispatch'
         env:
           MYSQL_USER: "ci_user"
