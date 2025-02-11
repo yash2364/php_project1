@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Load MySQL credentials from environment variables
+# Database credentials
 MYSQL_USER="ci_user"
-MYSQL_PASSWORD="${MYSQL_PASSWORD}"  # Secret from GitHub Actions
+MYSQL_PASSWORD="${MYSQL_PASSWORD}"  # Correct environment variable
 MYSQL_HOST="192.168.29.245"
 MYSQL_PORT="3306"
 MYSQL_DB="php_ecom"
 
-# Backup directory and timestamped file
+# Backup directory and filename
 BACKUP_DIR="backups"
 TIMESTAMP=$(date +"%Y%m%d%H%M%S")
 BACKUP_FILE="$BACKUP_DIR/php_ecom_backup_$TIMESTAMP.sql"
@@ -21,11 +21,10 @@ if [[ -z "$MYSQL_PASSWORD" ]]; then
     exit 1
 fi
 
-# Perform the backup
-echo "🔄 Starting database backup..."
+# Run mysqldump with correct password syntax
 mysqldump -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DB" > "$BACKUP_FILE"
 
-# Verify backup success
+# Verify if backup was successful
 if [ $? -eq 0 ]; then
     echo "✅ Backup successful: $BACKUP_FILE"
 else
@@ -33,9 +32,7 @@ else
     exit 1
 fi
 
-# Keep the last 5 backups and delete older ones
-echo "🧹 Cleaning up old backups..."
+# Keep only the last 5 backups, delete older ones
 ls -t "$BACKUP_DIR"/php_ecom_backup_*.sql | tail -n +6 | xargs rm -f 2>/dev/null
 
-echo "✅ Backup process completed successfully!"
 exit 0
