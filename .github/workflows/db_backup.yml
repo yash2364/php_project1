@@ -58,6 +58,8 @@ jobs:
 
       - name: Commit and Push Backup
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}  # Use the stored token
         run: |
           echo "🔄 Committing backup files..."
           git config --global user.name "github-actions"
@@ -68,10 +70,7 @@ jobs:
             exit 0
           fi
           git commit -m "🔄 Database backup: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-          git push
-        env:
-          GIT_AUTHOR_NAME: "GitHub Actions"
-          GIT_COMMITTER_NAME: "GitHub Actions"
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
 
       - name: Run Restore Script (Manual Trigger Only)
         if: github.event_name == 'workflow_dispatch'
