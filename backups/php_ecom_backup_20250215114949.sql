@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
 --
--- Host: 192.168.249.110    Database: php_ecom
+-- Host: 192.168.29.245    Database: php_ecom
 -- ------------------------------------------------------
 -- Server version	10.4.32-MariaDB
 
@@ -14,6 +14,31 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `dead stock`
+--
+
+DROP TABLE IF EXISTS `dead stock`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dead stock` (
+  `camera` int(255) NOT NULL,
+  `phone` int(255) NOT NULL,
+  `ipad` int(255) NOT NULL,
+  `headphone` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dead stock`
+--
+
+LOCK TABLES `dead stock` WRITE;
+/*!40000 ALTER TABLE `dead stock` DISABLE KEYS */;
+INSERT INTO `dead stock` VALUES (0,0,0,0),(1,2,3,4);
+/*!40000 ALTER TABLE `dead stock` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `orders`
@@ -61,7 +86,7 @@ CREATE TABLE `products` (
   `quantity` varchar(50) NOT NULL,
   `image` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +95,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (2,'Makeup ','cosmetics such as lipstick or powder applied to the face, used to enhance or alter the appearance','580','110','1725375028.jpg'),(5,'camera','black camera																										','330','5','1725374772.jpg'),(6,'laptop','Laptops are compact, portable versions of full-fledged Desktop Computers. ','1049','120','1725374561.jpg'),(7,'Black T Shirt','Complete Your Wardrobe with a Black Cotton Combo T-Shirt & Pant for Men - T-Shirt for Men - Very Comfortable and Fashionable','39','500','1725374617.jpeg'),(8,'Watch','Rolex watches are crafted from the finest raw materials and assembled with scrupulous attention to detail. ','599','50','1725374663.webp'),(9,'Mobile','hen something is mobile it can move or be moved easily. If you walk to the end of the block talking on your cell phone, you are a mobile being using a mobile device.','499','120','1725374753.jpeg');
+INSERT INTO `products` VALUES (2,'Makeup ','cosmetics such as lipstick or powder applied to the face, used to enhance or alter the appearance','580','110','1725375028.jpg'),(5,'camera','black camera																										','330','5','1725374772.jpg'),(6,'laptop','Laptops are compact, portable versions of full-fledged Desktop Computers. ','1049','120','1725374561.jpg'),(7,'Black T Shirt','Complete Your Wardrobe with a Black Cotton Combo T-Shirt & Pant for Men - T-Shirt for Men - Very Comfortable and Fashionable','39','500','1725374617.jpeg'),(8,'Watch','Rolex watches are crafted from the finest raw materials and assembled with scrupulous attention to detail. ','599','50','1725374663.webp'),(9,'Mobile','hen something is mobile it can move or be moved easily. If you walk to the end of the block talking on your cell phone, you are a mobile being using a mobile device.','499','120','1725374753.jpeg'),(10,'Samsung','ABCD','Rs.1000','100','');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +115,7 @@ CREATE TABLE `users` (
   `address` varchar(50) NOT NULL,
   `usertype` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +124,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'test','test@gmail.com','12345678','015484512','test','user'),(4,'admin','admin@gmail.com','123456','258520','canda','admin'),(8,'user','user@gmail.com','12345678','12345678','germany','user'),(9,'yamin','yamin@gmail.com','12345678','234567','dhaka , bangladesh','user'),(10,'adam','adam@gmail.com','12345678','1234567','india','user');
+INSERT INTO `users` VALUES (1,'test','test@gmail.com','12345678','015484512','test','user'),(4,'admin','admin@gmail.com','123456','258520','canda','admin'),(8,'user','user@gmail.com','12345678','12345678','germany','user'),(9,'yamin','yamin@gmail.com','12345678','234567','dhaka , bangladesh','user'),(10,'adam','adam@gmail.com','12345678','1234567','india','user'),(11,'niraj','niraj@gmail.com','Pass@123','123','abc','admin');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -112,4 +137,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-12 17:12:05
+-- Dump completed on 2025-02-15 11:49:49
