@@ -3,7 +3,7 @@
 # Database credentials
 MYSQL_USER="ci_user"
 MYSQL_PASSWORD="${MYSQL_PASSWORD}"  # Correct environment variable
-MYSQL_HOST="192.168.249.110"
+MYSQL_HOST="192.168.29.245"
 MYSQL_PORT="3306"
 MYSQL_DB="php_ecom"
 
