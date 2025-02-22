@@ -1,4 +1,4 @@
-Pritam Gavhane
+Yash Gavhane
 open cmd 
 c > user > navna > actions-runner 
 run.cmd (for running self hosted runner)
