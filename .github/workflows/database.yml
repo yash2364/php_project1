@@ -54,12 +54,12 @@ jobs:
           MYSQL_DB: "php_ecom"
         run: bash backups/backup_db.sh
 
-      - name: Delete old backups (keep latest 5)
+      - name: Delete old SQL backups (keep 5 newest)
         shell: bash
         run: |
-          echo "🧹 Cleaning old backups..."
+          echo "🧹 Cleaning old .sql backups..."
           cd backups/
-          ls -tp | grep -v '/$' | tail -n +6 | xargs -r rm --
+          ls -tp *.sql 2>/dev/null | tail -n +6 | xargs -r rm --
 
       - name: Mark repo as safe
         shell: bash
