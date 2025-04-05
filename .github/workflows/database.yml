@@ -6,6 +6,7 @@ on:
 jobs:
   backup_restore:
     runs-on: self-hosted
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -79,6 +80,7 @@ jobs:
             exit 0
           fi
           git commit -m "🔄 Database backup: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git pull --rebase origin 1st
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/yash2364/php_project1.git
 
       - name: Run Restore Script
