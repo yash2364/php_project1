@@ -1,9 +1,7 @@
 name: Database Backup & Restore
 
 on:
-  schedule:
-    - cron: '0 */24 * * *'  # Runs every 24 hours
-  workflow_dispatch:  # Allows manual execution
+  workflow_dispatch:  # ✅ Manual trigger only
 
 jobs:
   backup_restore:
@@ -56,6 +54,13 @@ jobs:
           MYSQL_DB: "php_ecom"
         run: bash backups/backup_db.sh
 
+      - name: Delete old backups (keep latest 5)
+        shell: bash
+        run: |
+          echo "🧹 Cleaning old backups..."
+          cd backups/
+          ls -tp | grep -v '/$' | tail -n +6 | xargs -r rm --
+
       - name: Mark repo as safe
         shell: bash
         run: git config --global --add safe.directory "C:/Users/navna/actions-runner/1st/php_project1/php_project1"
@@ -76,8 +81,7 @@ jobs:
           git commit -m "🔄 Database backup: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/yash2364/php_project1.git
 
-      - name: Run Restore Script (Manual Trigger Only)
-        if: github.event_name == 'workflow_dispatch'
+      - name: Run Restore Script
         shell: bash
         env:
           MYSQL_USER: "ci_user"
