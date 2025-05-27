@@ -1,7 +1,7 @@
 Yash Gavhane
 open cmd 
 c > user > navna > actions-runner 
-run.cmd (for running self hosted runner)
+.\run.cmd (for running self hosted runner)
 Project Structure
 
 http://localhost/php_project-master/product.php
