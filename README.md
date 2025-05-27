@@ -1,6 +1,5 @@
 Yash Gavhane
-open cmd 
-c > user > navna > actions-runner 
+cd C:\Users\navna\actions-runner 
 .\run.cmd (for running self hosted runner)
 Project Structure
 
