@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
 --
--- Host: 192.168.29.245    Database: php_ecom
+-- Host: 192.168.0.107    Database: php_ecom
 -- ------------------------------------------------------
 -- Server version	10.4.32-MariaDB
 
@@ -137,4 +137,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-15 12:04:33
+-- Dump completed on 2025-05-28 10:05:17
